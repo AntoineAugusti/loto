@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from loto import Loto
+from loto import Loto, Tirage
 
 
 class TestLoto(unittest.TestCase):
@@ -75,3 +75,10 @@ class TestLoto(unittest.TestCase):
                 expected,
                 loto.gains_tirage(**args)
             )
+
+
+class TestTirage(unittest.TestCase):
+    def test_random(self):
+        for _ in range(1, 1000):
+            boules, numero_chance = Tirage.random()
+            self.assertTrue(Tirage.est_valide(boules, numero_chance))

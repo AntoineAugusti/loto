@@ -1,4 +1,34 @@
 # -*- coding: utf-8 -*-
+from random import randint
+
+
+class Tirage(object):
+    NOMBRE_BOULES = 5
+
+    @staticmethod
+    def random():
+        return Tirage.random_boules(), Tirage.random_numero_chance()
+
+    @staticmethod
+    def random_boules():
+        boules = set()
+        while len(boules) != Tirage.NOMBRE_BOULES:
+            boules.add(randint(1, 49))
+        return list(boules)
+
+    @staticmethod
+    def random_numero_chance():
+        return randint(1, 10)
+
+    @staticmethod
+    def est_valide(boules, numero_chance):
+        numero_chance_valide = numero_chance in range(1, 11)
+        valide_boules = len(set(boules)) == Tirage.NOMBRE_BOULES \
+            and all(map(lambda e: e in range(1, 50), boules))
+
+        return valide_boules and numero_chance_valide
+
+
 class Loto(object):
     def __init__(self, boules, numero_chance, gains=None):
         super(Loto, self).__init__()
@@ -18,10 +48,7 @@ class Loto(object):
             return self.gains[rang]
 
     def verifier_tirage(self, boules, numero_chance):
-        numero_chance_valide = numero_chance in range(1, 10)
-        valide_boules = len(set(boules)) == 5 and all(map(lambda e: e in range(1, 50), boules))
-
-        if not (numero_chance_valide and valide_boules):
+        if not (Tirage.est_valide(boules, numero_chance)):
             raise ValueError('Tirage invalide')
 
     def rang(self, boules, numero_chance):
