@@ -23,45 +23,22 @@ class TestLoto(unittest.TestCase):
     def test_rang(self):
         loto = Loto(boules=[29, 25, 2, 39, 20], numero_chance=7)
 
-        self.assertEquals(
-            (1, True),
-            loto.rang(boules=[29, 25, 2, 39, 20], numero_chance=7)
-        )
+        tests = [
+            ((1, True), {'boules': [29, 25, 2, 39, 20], 'numero_chance': 7}),
+            ((2, False), {'boules': [29, 25, 2, 39, 20], 'numero_chance': 2}),
+            ((3, False), {'boules': [29, 25, 3, 39, 20], 'numero_chance': 6}),
+            ((4, False), {'boules': [29, 25, 3, 40, 20], 'numero_chance': 6}),
+            ((5, False), {'boules': [25, 2, 3, 40, 5], 'numero_chance': 2}),
+            ((6, False), {'boules': [25, 3, 4, 40, 5], 'numero_chance': 2}),
+            ((6, True), {'boules': [24, 3, 2, 40, 5], 'numero_chance': 7}),
+            ((None, False), {'boules': [24, 3, 1, 40, 5], 'numero_chance': 2}),
+        ]
 
-        self.assertEquals(
-            (2, False),
-            loto.rang(boules=[29, 25, 2, 39, 20], numero_chance=2)
-        )
-
-        self.assertEquals(
-            (3, False),
-            loto.rang(boules=[29, 25, 3, 39, 20], numero_chance=6)
-        )
-
-        self.assertEquals(
-            (4, False),
-            loto.rang(boules=[29, 25, 3, 40, 20], numero_chance=6)
-        )
-
-        self.assertEquals(
-            (5, False),
-            loto.rang(boules=[25, 2, 3, 40, 5], numero_chance=2)
-        )
-
-        self.assertEquals(
-            (6, False),
-            loto.rang(boules=[25, 3, 4, 40, 5], numero_chance=2)
-        )
-
-        self.assertEquals(
-            (6, True),
-            loto.rang(boules=[24, 3, 2, 40, 5], numero_chance=7)
-        )
-
-        self.assertEquals(
-            (None, False),
-            loto.rang(boules=[24, 3, 1, 40, 5], numero_chance=2)
-        )
+        for expected, args in tests:
+            self.assertEquals(
+                expected,
+                loto.rang(**args)
+            )
 
     def test_gains_tirage(self):
         gains = {
@@ -73,59 +50,28 @@ class TestLoto(unittest.TestCase):
             6: 2,
         }
 
-        loto = Loto(boules=[29, 25, 2, 39, 20], numero_chance=7, gains=gains)
-
-        self.assertEquals(
-            gains[1],
-            loto.gains_tirage(boules=[29, 25, 2, 39, 20], numero_chance=7)
+        loto = Loto(
+            boules=[29, 25, 2, 39, 20],
+            numero_chance=7,
+            gains=gains
         )
 
-        self.assertEquals(
-            gains[2],
-            loto.gains_tirage(boules=[29, 25, 2, 39, 20], numero_chance=2)
-        )
+        tests = [
+            (gains[1], {'boules': [29, 25, 2, 39, 20], 'numero_chance': 7}),
+            (gains[2], {'boules': [29, 25, 2, 39, 20], 'numero_chance': 2}),
+            (gains[3], {'boules': [29, 25, 3, 39, 20], 'numero_chance': 6}),
+            (gains[3] + gains[6], {'boules': [29, 25, 3, 39, 20], 'numero_chance': 7}),
+            (gains[4], {'boules': [29, 25, 3, 40, 20], 'numero_chance': 6}),
+            (gains[4] + gains[6], {'boules': [29, 25, 3, 40, 20], 'numero_chance': 7}),
+            (gains[5], {'boules': [25, 2, 3, 40, 5], 'numero_chance': 2}),
+            (gains[5] + gains[6], {'boules': [25, 2, 3, 40, 5], 'numero_chance': 7}),
+            (gains[6], {'boules': [25, 3, 4, 40, 5], 'numero_chance': 2}),
+            (gains[6], {'boules': [24, 3, 2, 40, 5], 'numero_chance': 7}),
+            (0, {'boules': [24, 3, 1, 40, 5], 'numero_chance': 2}),
+        ]
 
-        self.assertEquals(
-            gains[3],
-            loto.gains_tirage(boules=[29, 25, 3, 39, 20], numero_chance=6)
-        )
-
-        self.assertEquals(
-            gains[3] + gains[6],
-            loto.gains_tirage(boules=[29, 25, 3, 39, 20], numero_chance=7)
-        )
-
-        self.assertEquals(
-            gains[4],
-            loto.gains_tirage(boules=[29, 25, 3, 40, 20], numero_chance=6)
-        )
-
-        self.assertEquals(
-            gains[4] + gains[6],
-            loto.gains_tirage(boules=[29, 25, 3, 40, 20], numero_chance=7)
-        )
-
-        self.assertEquals(
-            gains[5],
-            loto.gains_tirage(boules=[25, 2, 3, 40, 5], numero_chance=2)
-        )
-
-        self.assertEquals(
-            gains[5] + gains[6],
-            loto.gains_tirage(boules=[25, 2, 3, 40, 5], numero_chance=7)
-        )
-
-        self.assertEquals(
-            gains[6],
-            loto.gains_tirage(boules=[25, 3, 4, 40, 5], numero_chance=2)
-        )
-
-        self.assertEquals(
-            gains[6],
-            loto.gains_tirage(boules=[24, 3, 2, 40, 5], numero_chance=7)
-        )
-
-        self.assertEquals(
-            0,
-            loto.gains_tirage(boules=[24, 3, 1, 40, 5], numero_chance=2)
-        )
+        for expected, args in tests:
+            self.assertEquals(
+                expected,
+                loto.gains_tirage(**args)
+            )
