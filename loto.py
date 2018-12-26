@@ -23,7 +23,7 @@ class Tirage(object):
     @staticmethod
     def est_valide(boules, numero_chance):
         numero_chance_valide = numero_chance in range(1, 11)
-        valide_boules = len(set(boules)) == Tirage.NOMBRE_BOULES \
+        valide_boules = len(boules) == Tirage.NOMBRE_BOULES \
             and all(map(lambda e: e in range(1, 50), boules))
 
         return valide_boules and numero_chance_valide
