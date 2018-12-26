@@ -33,6 +33,7 @@ class Loto(object):
     def __init__(self, boules, numero_chance, gains=None):
         super(Loto, self).__init__()
         self.verifier_tirage(boules, numero_chance)
+        self.verifier_gains(gains)
 
         self.tirage = {'boules': boules, 'numero_chance': numero_chance}
         self.gains = gains
@@ -50,6 +51,15 @@ class Loto(object):
     def verifier_tirage(self, boules, numero_chance):
         if not (Tirage.est_valide(boules, numero_chance)):
             raise ValueError('Tirage invalide')
+
+    def verifier_gains(self, gains):
+        if gains is None:
+            return
+        gains_presents = list(gains.keys()) == list(range(1, 7))
+        valeurs = list(gains.values())
+        gains_croissants = all(map(lambda e: e[0] > e[1] > 0, zip(valeurs, valeurs[1:])))
+        if not (gains_presents and gains_croissants):
+            raise ValueError('Gains invalides')
 
     def rang(self, boules, numero_chance):
         self.verifier_tirage(boules, numero_chance)
