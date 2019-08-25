@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from random import randint
+from random import randint, shuffle
 
 
 class Tirage(object):
@@ -11,10 +11,9 @@ class Tirage(object):
 
     @staticmethod
     def random_boules():
-        boules = set()
-        while len(boules) != Tirage.NOMBRE_BOULES:
-            boules.add(randint(1, 49))
-        return list(boules)
+        boules = list(range(1, 50))
+        shuffle(boules)
+        return boules[: Tirage.NOMBRE_BOULES]
 
     @staticmethod
     def random_numero_chance():
@@ -23,8 +22,9 @@ class Tirage(object):
     @staticmethod
     def est_valide(boules, numero_chance):
         numero_chance_valide = numero_chance in range(1, 11)
-        valide_boules = len(boules) == Tirage.NOMBRE_BOULES \
-            and all(map(lambda e: e in range(1, 50), boules))
+        valide_boules = len(set(boules)) == Tirage.NOMBRE_BOULES and all(
+            map(lambda e: e in range(1, 50), boules)
+        )
 
         return valide_boules and numero_chance_valide
 
@@ -35,7 +35,7 @@ class Loto(object):
         self.verifier_tirage(boules, numero_chance)
         self.verifier_gains(gains)
 
-        self.tirage = {'boules': boules, 'numero_chance': numero_chance}
+        self.tirage = {"boules": boules, "numero_chance": numero_chance}
         self.gains = gains
 
     def gains_tirage(self, boules, numero_chance):
@@ -50,23 +50,25 @@ class Loto(object):
 
     def verifier_tirage(self, boules, numero_chance):
         if not (Tirage.est_valide(boules, numero_chance)):
-            raise ValueError('Tirage invalide')
+            raise ValueError("Tirage invalide")
 
     def verifier_gains(self, gains):
         if gains is None:
             return
         gains_presents = list(gains.keys()) == list(range(1, 7))
         valeurs = list(gains.values())
-        gains_croissants = all(map(lambda e: e[0] > e[1] > 0, zip(valeurs, valeurs[1:])))
+        gains_croissants = all(
+            map(lambda e: e[0] > e[1] > 0, zip(valeurs, valeurs[1:]))
+        )
         if not (gains_presents and gains_croissants):
-            raise ValueError('Gains invalides')
+            raise ValueError("Gains invalides")
 
     def rang(self, boules, numero_chance):
         self.verifier_tirage(boules, numero_chance)
 
-        intersect = set(self.tirage['boules']).intersection(set(boules))
+        intersect = set(self.tirage["boules"]).intersection(set(boules))
         nombre_numeros = len(intersect)
-        numero_chance_valide = numero_chance == self.tirage['numero_chance']
+        numero_chance_valide = numero_chance == self.tirage["numero_chance"]
 
         rang = self.rang_grille(nombre_numeros, numero_chance_valide)
 
