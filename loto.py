@@ -56,7 +56,7 @@ class Loto(object):
         if gains is None:
             return
         gains_presents = list(gains.keys()) == list(range(1, 7))
-        valeurs = list(gains.values())
+        valeurs = [g for g in gains.values() if g != 0]
         gains_croissants = all(
             map(lambda e: e[0] > e[1] > 0, zip(valeurs, valeurs[1:]))
         )
