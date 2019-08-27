@@ -55,12 +55,20 @@ class Loto(object):
     def verifier_gains(self, gains):
         if gains is None:
             return
-        gains_presents = list(gains.keys()) == list(range(1, 7))
-        valeurs = [g for g in gains.values() if g != 0]
-        gains_croissants = all(
-            map(lambda e: e[0] > e[1] > 0, zip(valeurs, valeurs[1:]))
-        )
-        if not (gains_presents and gains_croissants):
+
+        is_zero = False
+        last_value = 0
+
+        try:
+            for key in reversed(range(1, 7)):
+                if gains[key] == 0:
+                    is_zero = True
+                if is_zero and gains[key] != 0:
+                    raise ValueError("Gains invalides")
+                if not (gains[key] > last_value) and not is_zero:
+                    raise ValueError("Gains invalides")
+                last_value = gains[key]
+        except KeyError:
             raise ValueError("Gains invalides")
 
     def rang(self, boules, numero_chance):

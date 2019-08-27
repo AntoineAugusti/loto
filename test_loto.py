@@ -20,6 +20,29 @@ class TestLoto(unittest.TestCase):
         with self.assertRaises(ValueError):
             Loto(boules=[29, 25, 2, 39, 49], numero_chance=0)
 
+    def test_gains(self):
+        boules = Tirage.random_boules()
+        numero_chance = Tirage.random_numero_chance()
+
+        valid_values = [
+            {1: 7000000, 2: 485170.5, 3: 1294.2, 4: 11.5, 5: 5.4, 6: 2},
+            {1: 0, 2: 485170.5, 3: 1294.2, 4: 11.5, 5: 5.4, 6: 2},
+            {1: 0, 2: 0, 3: 1294.2, 4: 11.5, 5: 5.4, 6: 2},
+        ]
+
+        for gains in valid_values:
+            Loto(boules=boules, numero_chance=numero_chance, gains=gains)
+
+        invalid_values = [
+            {1: 7000000, 2: 485170.5, 3: 1294.2, 4: 11.5, 5: 5.4, 6: 0},
+            {1: 0, 2: 485170.5, 3: 1294.2, 4: 11.5, 5: 5.4, 6: -2},
+            {1: 0, 2: 0, 3: 1294.2, 4: 11.5, 5: 5.4, 6: 6},
+        ]
+
+        for gains in invalid_values:
+            with self.assertRaises(ValueError):
+                Loto(boules=boules, numero_chance=numero_chance, gains=gains)
+
     def test_rang(self):
         loto = Loto(boules=[29, 25, 2, 39, 20], numero_chance=7)
 
