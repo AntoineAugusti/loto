@@ -87,10 +87,19 @@ class TestTirage(unittest.TestCase):
     def test_est_valide(self):
         self.assertTrue(Tirage.est_valide([3, 5, 10, 13, 15], 3))
         self.assertTrue(Tirage.est_valide([1, 5, 10, 13, 49], 3))
+
         self.assertFalse(Tirage.est_valide([3, 3, 10, 13, 15], 3))
         self.assertFalse(Tirage.est_valide([1, 3, 10, 13, 50], 3))
 
     def test_random(self):
+        set_numeros_chance = set()
+        set_numeros = set()
+
         for _ in range(1, 1000):
             boules, numero_chance = Tirage.random()
+            set_numeros_chance.add(numero_chance)
+            set_numeros = set_numeros.union(set(boules))
             self.assertTrue(Tirage.est_valide(boules, numero_chance))
+
+        self.assertEquals(set_numeros_chance, set(range(1, 11)))
+        self.assertEquals(set_numeros, set(range(1, 50)))
