@@ -14,6 +14,12 @@ for row in csv.DictReader(open("loto.csv")):
     gains = {}
     for i in range(1, 7):
         gains[i] = float(row["rapport_du_rang" + str(i)])
+    if gains[1] > 0 and gains[2] == 0:
+        # TODO FIXME
+        # Pour éviter les cas où seul un gagnant au rang 1
+        # et aucun gagnants au rang 2. Avoir un gain nul
+        # au rang 2 lève une exception
+        gains[2] = gains[3] + 0.01
     lotos.append(Loto(boules, numero_chance, gains))
 
 perso_boules, perso_numero_chance = Tirage.random()
@@ -29,5 +35,7 @@ for loto in lotos:
     rangs[rang] += 1
     depense += PRIX_GRILLE
 
-print("On joue : ", perso_boules, perso_numero_chance)
-print("Résultat : ", depense, sum(historique_gains), max(historique_gains), rangs)
+print(f"On joue : {perso_boules} {perso_numero_chance} ")
+print(
+    f"Résultat : dépense {depense} €, gains {round(sum(historique_gains), 2)} €. Rangs {dict(rangs)} "
+)
